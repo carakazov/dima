@@ -1,0 +1,43 @@
+﻿@using MySocialNetwork.DTO
+@model MySocialNetwork.DTO.AlbumCreateDto
+
+@{
+    UserDto currentUser = (UserDto) Session["session"];
+    bool groupWall = (bool) ViewData["groupWall"];
+    int groupId = (int) ViewData["groupId"];
+    int ownerId = currentUser.Id; 
+    if (groupId != 0)
+    {
+        ownerId = groupId;
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>CreateWall</title>
+</head>
+<body>
+<div>
+    <h1>Create wall</h1>
+</div>
+<div>
+    @using (Html.BeginForm(new {ownerId = ownerId, groupWall = groupWall}))
+    {
+        <div>
+            @Html.LabelFor(m => m.Title)
+            @Html.EditorFor(m => m.Title)
+            @Html.ValidationMessageFor(m =>m.Title)
+        </div>
+        <div>
+            @Html.LabelFor(m => m.Type, "Album content type")
+            @Html.EnumDropDownListFor(m => m.Type)
+        </div>
+        <div>
+            <input type="submit" value="Create album"/>
+        </div>
+    }
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+﻿@using MySocialNetwork.DTO
+@model IEnumerable<MySocialNetwork.DTO.AlbumDto>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Albums</title>
+</head>
+<body>
+<div>
+    <h1>Your albums</h1>
+</div>
+<div>
+    @if (Model.Count() > 0)
+    {
+        foreach (AlbumDto item in Model)
+        {
+            <div>
+                @Html.ActionLink(item.AlbumTitle, "OpenAlbum", new {wallId = item.AlbumWall.Id})
+            </div>
+        }   
+    }
+    else
+    {
+        <label>Still no albums</label>
+    }
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+﻿@using MySocialNetwork.DTO
+@model MySocialNetwork.DTO.GroupCreationDto
+@{
+    UserDto currentUser = (UserDto) Session["session"];
+}
+<label>Create new group</label>
+
+@using (Ajax.BeginForm("CreateGroup", new {userId = currentUser.Id}, new AjaxOptions(){UpdateTargetId = "groupsList"}))
+{
+    <div>
+        <p>
+            @Html.EditorFor(item => item.Title)
+        </p>
+        <p>
+            @Html.EnumDropDownListFor(item=> item.Type)
+        </p>
+        <input type="submit" value="Create"/>
+    </div>
+}

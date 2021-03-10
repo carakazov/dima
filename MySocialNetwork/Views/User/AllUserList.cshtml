@@ -1,0 +1,82 @@
+﻿@using System.Data
+@using MySocialNetwork.DTO
+@model IEnumerable<MySocialNetwork.DTO.UserInfoDto>
+@{
+    int   groupId = (int) ViewData["groupId"]; 
+    bool banInGroup = (bool) ViewData["banInGroup"];
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>All users</title>
+</head>
+<body>
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.Label("First name")
+            </th>
+            <th>
+                @Html.Label("Second name")
+            </th>
+            <th>
+                @Html.Label("Middle name")
+            </th>
+            <th>
+                @Html.Label("Age")
+            </th>
+            <th>
+                @Html.Label("Rating")
+            </th>
+            <th>
+                @Html.Label("Status")
+            </th>
+        </tr>
+        @foreach (UserInfoDto item in Model)
+        {
+            <tr>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.SecondName
+                </td>
+                <td>
+                    @item.MiddleName
+                </td>
+                <td>
+                    @item.Age
+                </td>
+                <td>
+                    @item.Rating
+                </td>
+                @if (!banInGroup)
+                {
+                    <td>
+                        @if (item.Banned)
+                        {
+                            @Html.Label("User banned")
+                        }
+                        else
+                        {
+                            @Html.Label("Has access")
+                        }
+                    </td>   
+                }
+                <td>
+                    @Html.ActionLink("To page", "PrivatePage", "Page", new {login = item.Login}, null)
+                </td>
+                <td>
+                    @using (Html.BeginForm("BanUser", "User", new {userId = item.Id, banInGroup = banInGroup, groupId = groupId}))
+                    {
+                        <input type="submit" value="Change state"/>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+</body>
+</html>

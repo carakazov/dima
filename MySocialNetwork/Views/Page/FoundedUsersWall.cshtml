@@ -1,0 +1,55 @@
+﻿@model MySocialNetwork.DTO.FoundedUsersDto
+@using MySocialNetwork.DTO;
+@{
+    UserDto currentUser = (UserDto) Session["session"];
+    List<int> sentRequestIds = currentUser.SentFriendshipRequests.Select(fr => fr.ReceiverId).ToList();
+    List<int> friendIds = currentUser.Friends.Select(f => f.UserInfo.Id).ToList();
+    
+}
+
+<h3>Founded users</h3>
+
+@foreach (UserInfoDto item in Model.FoundedUsers)
+{
+    <div>
+        <p>
+            @{ string fullName = item.FirstName + " " + item.SecondName + " " + item.MiddleName;}
+            @Html.ActionLink(fullName, "PrivatePage", new { login = item.Login })
+        </p>
+        <p>
+            Age is: @item.Age
+        </p>
+        <p>
+            @using (Ajax.BeginForm("SendRequest", "Page", new
+            {
+                firstName = Model.UserInfo.FirstName, 
+                secondName = Model.UserInfo.SecondName, 
+                middleName = Model.UserInfo.MiddleName, 
+                minAge = Model.UserInfo.MinAge, 
+                maxAge = Model.UserInfo.MaxAge, 
+                senderId = currentUser.Id, 
+                receiverId = item.Id, 
+                sendingDate = DateTime.Now
+            }, 
+                new AjaxOptions(){UpdateTargetId = "foundedUsers"}))
+            {
+                if (sentRequestIds.Contains(item.Id))
+                {
+                    <label>Friendship request sent!</label>
+                }
+                else if (item.Id == currentUser.Id)
+                {
+                    <label>It is you!</label>
+                }
+                else if (friendIds.Contains(item.Id))
+                {
+                    <label>Already your friend!</label>
+                }
+                else
+                {
+                    <input type="submit", value="Send request"/>   
+                }
+            }
+        </p>
+    </div>
+}

@@ -1,0 +1,21 @@
+﻿@using System.Data.Entity.Core.Mapping
+@model MySocialNetwork.DTO.AlbumDto
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Album</title>
+</head>
+<body>
+<div>
+    <h1>@Model.AlbumTitle</h1>
+</div>
+<div id="wall">
+    @{Html.RenderAction("ShowAlbumWall", "Page", new {wall = Model.AlbumWall});}
+</div>
+<div>
+    @{Html.RenderAction("PostingForm", "Page", new {wallId = Model.AlbumWall.Id, onlyImage = true, hostId = 0});}
+</div>
+</body>
+</html>

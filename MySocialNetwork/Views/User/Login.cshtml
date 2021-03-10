@@ -1,0 +1,31 @@
+﻿@model MySocialNetwork.DTO.LoginAndPasswordDto
+
+@{
+    ViewBag.Title = "Login page";
+    //Layout = "~/Views/Shared/_Layout";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<h1>Login page</h1>
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        <div>
+            @Html.LabelFor(model => model.Login, "Input login")
+            @Html.EditorFor(model => model.Login)
+        </div>
+        <div>
+            @Html.LabelFor(model => model.Password, "Input password")
+            @Html.EditorFor(model => model.Password)
+        </div>
+        <div>
+            <input type="submit" value="Login"/>
+        </div>
+    }
+</div>
+</html>

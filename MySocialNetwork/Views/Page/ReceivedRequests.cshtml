@@ -1,0 +1,45 @@
+﻿@using MySocialNetwork.DTO
+@model IEnumerable<MySocialNetwork.DTO.UserInfoDto>
+@{
+    string linkText;
+    int currentUserId = ((UserDto) Session["session"]).Id;
+}
+
+@if (Model.Count() > 0)
+{
+    <label>Requests</label>
+    foreach (UserInfoDto sender in Model)
+    {
+        <div>
+        
+                    @{linkText = sender.FirstName + " " + sender.SecondName + " " + sender.MiddleName;}
+            <div>
+                <p>
+                    @Html.ActionLink(linkText, "PrivatePage", new {login = sender.Login})
+                </p>
+                <p>
+                    Age: @sender.Age
+                </p>
+            </div>
+                @using (Ajax.BeginForm("StartFriendship", "Friendship", new {userId = currentUserId, friendId = sender.Id}, 
+                    new AjaxOptions(){UpdateTargetId = "receivedRequests"}))
+                {
+                    <div>
+                        <input type="submit" value="Add friend"/>
+                    </div>
+                }
+            @using (Ajax.BeginForm("DeclineRequest", "Friendship", new {userId = currentUserId, senderId = sender.Id},
+                new AjaxOptions() {UpdateTargetId = "receivedRequests"}))
+            {
+                <div>
+                    <input type="submit" value="Decline"/>
+                </div>
+            }
+        </div>
+    }
+    
+}
+else
+{
+    <label>There are'nt any requests</label>
+}

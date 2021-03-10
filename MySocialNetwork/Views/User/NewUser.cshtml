@@ -1,0 +1,64 @@
+﻿@model MySocialNetwork.DTO.RegistrationDto
+
+@{
+    ViewBag.Title = "Registration";
+}
+
+<h2>Registration</h2>
+<html>
+<head>
+    <title>Registration form</title>
+</head>
+<body>
+<div>
+    <h1>Registrate</h1>
+</div>
+<div>
+  <html>
+  <head>
+      <title>Registration form</title>
+  </head>
+  <body>
+  <div>
+          @using (Html.BeginForm("NewUser", "User", FormMethod.Post))
+          {
+              <div>
+                  @Html.LabelFor(model => model.Login)
+                  @Html.EditorFor(model => model.Login)
+                  @Html.ValidationMessageFor(model => model.Login)
+              </div>
+              <div>
+                  @Html.LabelFor(model => model.Password)
+                  @Html.EditorFor(model => model.Password)
+                  @Html.ValidationMessageFor(model => model.Password)
+              </div>
+              <div>
+                  @Html.LabelFor(model => model.FirstName, "Name")
+                  @Html.EditorFor(model => model.FirstName)
+                  @Html.ValidationMessageFor(model => model.FirstName)
+              </div>
+              <div>
+                  @Html.LabelFor(model => model.SecondName, "Surname")
+                  @Html.EditorFor(model => model.SecondName)
+                  @Html.ValidationMessageFor(model => model.SecondName)
+              </div>
+              <div>
+                  @Html.LabelFor(model => model.MiddleName, "Middle name")
+                  @Html.EditorFor(model => model.MiddleName)
+                  @Html.ValidationMessageFor(model => model.MiddleName)
+              </div>
+              <div>
+                  @Html.LabelFor(model => model.BirthDate, "Birth date")
+                  @Html.EditorFor(model => model.BirthDate)
+                  @Html.ValidationMessageFor(model => model.BirthDate)
+              </div>
+              <div>
+                  <input type="submit" value="Registrate"/>
+              </div>
+          }
+  </div>
+  </body>
+  </html>
+</div>
+</body>
+</html>

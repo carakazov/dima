@@ -1,0 +1,28 @@
+﻿@using MySocialNetwork.DTO
+@model MySocialNetwork.DTO.InputPostDto
+@{
+    GroupRoles role = (GroupRoles) ViewData["role"];
+}
+<div>
+    @if (role == GroupRoles.Admin || role == GroupRoles.Moder)
+    {
+        using (Ajax.BeginForm("Post", new {wallId = Model.WallId}, new AjaxOptions(){UpdateTargetId = "wall"}, new {enctype="multipart/form-data"}))
+        {
+            if (!Model.OnlyImage)
+            {
+                <div>
+                    <p>
+                        @Html.Label("Input your message: ")
+                        @Html.TextAreaFor(model => model.Text)
+                    </p>
+                </div>
+            }
+            <div>
+                <input type="file" name="Media"/>
+            </div>
+            <div>
+                <input type="submit" value="Post"/>
+            </div>
+        }
+    }
+</div>

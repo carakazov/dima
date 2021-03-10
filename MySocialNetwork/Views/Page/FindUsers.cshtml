@@ -1,0 +1,50 @@
+﻿@model MySocialNetwork.DTO.FindUsersDto
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Find users</title>
+</head>
+<body>
+<div>
+    <h1>Find users</h1>
+</div>
+
+<div>
+    @using (Ajax.BeginForm("StartFindUsers", "Page", new AjaxOptions() {UpdateTargetId = "foundedUsers"}))
+    {
+        <div>
+            <div>
+                @Html.LabelFor(model => model.FirstName, "Input first name")
+                @Html.EditorFor(model => model.FirstName)
+            </div>
+            <div>
+                @Html.LabelFor(model => model.SecondName, "Input second name")
+                @Html.EditorFor(model => model.SecondName)
+            </div>
+            <div>
+                @Html.LabelFor(model => model.MiddleName, "Input middle name")
+                @Html.EditorFor(model => model.MiddleName)
+            </div>
+            <div>
+                @Html.LabelFor(model => model.MinAge, "Min age")
+                @Html.EditorFor(model => model.MinAge)
+                @Html.ValidationMessageFor(model => model.MinAge)
+            </div>
+            <div>
+                @Html.LabelFor(model => model.MaxAge, "Min age")
+                @Html.EditorFor(model => model.MaxAge)
+                @Html.ValidationMessageFor(model => model.MaxAge)
+            </div>
+        </div>
+        <input type="submit" value="Find"/>
+    }
+</div>
+    
+<div id="foundedUsers">
+        
+</div>
+</body>
+</html>

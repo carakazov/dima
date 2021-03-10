@@ -1,0 +1,58 @@
+﻿@using MySocialNetwork.DAO
+@using MySocialNetwork.DTO
+@model MySocialNetwork.DTO.UserDto
+
+@{
+    UserDto currentUser = (UserDto) Session["session"];
+    int currentWallId = Model.Walls.Where(m => m.WallType == WallTypes.Main.ToString()).First().Id;
+}
+@{
+    if (Model.Id == currentUser.Id)
+    {
+        <h1>Welcome home!</h1>
+    }
+}
+<div>
+    <p>
+        @Html.LabelFor(model=> model.FirstName, "First name: ")
+        @Model.FirstName
+    </p>
+    <p>
+        @Html.LabelFor(model => model.SecondName, "Second name: ")
+        @Model.SecondName
+    </p>
+    <p>
+        @Html.LabelFor(model => model.MiddleName, "Middle name: ")
+        @Model.MiddleName
+    </p>
+    <p>
+        @Html.LabelFor(model => model.Age, "Age: ")
+        @Model.Age
+    </p>
+    <p>
+        @Html.LabelFor(model => model.Birthday, "Birthday: ")
+        @Model.Birthday
+    </p>
+    <p>
+        @Html.LabelFor(model => model.RegistrationDate, "User since: ")
+        @Model.RegistrationDate
+    </p>
+</div>
+
+@if (Model.Id == currentUser.Id)
+{
+    <div id="receivedRequests">
+        @{Html.RenderAction("ShowReceivedRequests");}
+    </div>    
+}
+
+
+
+<div id="wall">
+        @{ Html.RenderAction("Wall", new { wallId = currentWallId }); }
+</div>
+
+
+<div>
+    @{Html.RenderAction("PostingForm", new { wallId = currentWallId, onlyImage = false }); }
+</div>

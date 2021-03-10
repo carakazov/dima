@@ -1,0 +1,100 @@
+﻿@using MySocialNetwork.DAO
+@using MySocialNetwork.DTO
+@using MySocialNetwork.Models.SocialNetwork
+@using GroupRoles = MySocialNetwork.DTO.GroupRoles
+@model MySocialNetwork.DTO.GroupDto
+@{
+    UserDto user = (UserDto) Session["session"];
+    int mainWallId = (int) ViewData["mainWallId"];
+    GroupRoles role = (GroupRoles) ViewData["role"];
+    int groupId = (int) ViewData["groupId"];
+    bool requestIsSent = (bool) ViewData["requestIsSent"];
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Group @Model.Title</title>
+</head>
+<body>
+@{
+    if (Model.ReaderState == ReaderProfileStates.Banned)
+    {
+        <h2>You are banned in this group</h2>
+    }
+    else
+    {
+        if (Model.GroupTypeId == 2 && Model.ReaderState == ReaderProfileStates.Unsubscribed)
+        {
+            <h1>This is closed group, you should send request first;</h1>
+            using (Html.BeginForm("SendRequest", "Group", new {groupId = groupId}))
+            {
+                if (requestIsSent)
+                {
+                    <label>Wait response</label>
+                }
+                else
+                {
+                    <input type="submit" value="send"/>                    
+                }
+
+            }
+        }
+        else
+        {
+             <div>
+            <h1>Welcome to the <b>@Model.Title</b> group</h1>
+            <div>
+                <p>
+                    <label>Group's albums: </label><br/>
+                    <label>
+                        @Html.ActionLink("Photo albums", "GetGroupAlbums", "Wall", new {groupId = Model.Id, type = ContentTypes.Image}, null)
+                    </label>
+                    <label>
+                        @Html.ActionLink("Music albums", "GetGroupAlbums", "Wall", new {groupId = Model.Id, type = ContentTypes.Audio}, null)
+                    </label>
+                    <label>
+                        @Html.ActionLink("Video albums", "GetGroupAlbums", "Wall", new {groupId = Model.Id, type = ContentTypes.Video}, null)
+                    </label>
+                </p>
+                <p>
+                    @if (role == GroupRoles.Admin || role == GroupRoles.Moder)
+                    {
+                        Html.RenderAction("CreateWall", "Wall", new {groupId = groupId, groupWall = true});
+                        <label>
+                             @Html.ActionLink("Show requests", "ShowRequests", new {groupId = groupId});
+                        </label>
+                        <label>@Html.ActionLink("All user", "ShowAllUsers", "User", new {groupId = groupId}, null)</label>
+                    }
+                    
+                </p>
+            </div>
+            <div>
+                @if (Model.ReaderState == ReaderProfileStates.Unsubscribed)
+                {
+                    <label>
+                        @using (Html.BeginForm("Subscribe", "Group", new {groupId = Model.Id}))
+                        {
+                            <input type="submit" value="Subscribe"/>
+                        }
+                    </label>
+                }
+                else
+                {
+                    <label>
+                        You subscribed
+                    </label>
+                }
+            </div>
+            <label>Posts:</label>
+            <div id="wall">
+                @{ Html.RenderAction("Wall", new {wallId = mainWallId}); }
+            </div>
+            <div>
+                @{ Html.RenderAction("ShowGroupPostingForm", new {wallId = mainWallId, onlyImage = false});}
+            </div>
+        </div>
+        }
+    }
+}
+</body>
+</html>

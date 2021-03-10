@@ -1,0 +1,36 @@
+﻿@using MySocialNetwork.DTO
+@model IEnumerable<MySocialNetwork.DTO.FriendDto>
+
+@{
+    string linkText;
+    UserDto userDto = (UserDto) Session["session"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Friend list</title>
+</head>
+<body>
+<div>
+    <h1>Your friends:</h1>
+    @foreach (FriendDto friend in Model)
+    {
+        {
+           linkText = friend.UserInfo.FirstName + " " + friend.UserInfo.SecondName + " " + friend.UserInfo.MiddleName;
+        }
+        @Html.ActionLink(linkText, "PrivatePage", "Page", new {login = friend.UserInfo.Login}, null)
+        <p>
+            Age: @friend.UserInfo.Age
+        </p>
+        <p>
+            Friendship type: @friend.FriendshipType
+        </p>
+        <p>
+            @Html.ActionLink("Dialog", "OpenDialog", "Dialog", new {login = friend.UserInfo.Login, firstUserId = friend.UserInfo.Id, secondUserId = userDto.Id}, null)
+        </p>
+    }
+</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+﻿@using Microsoft.Ajax.Utilities
+@using MySocialNetwork.DTO
+@using MySocialNetwork.Models.SocialNetwork
+@using MySocialNetwork.Utils.Helpers
+@model MySocialNetwork.DTO.WallDto
+
+@{
+    UserDto userDto = (UserDto) Session["session"];
+    IEnumerable<int> scoredPostIds = userDto.ScoredPosts.Select(sp => sp.PostId);
+}
+
+@{
+    if (Model.Posts.Count > 0)
+    {
+      foreach (PostDto post in Model.Posts)
+      {
+          string originalPostArea = "originalPostArea" + post.Id;
+              if (post.HostId == null)
+              {
+                  Html.RenderAction("RenderPost", new {postDto = post});
+              }
+              if (post.OriginalPostId != null)
+              {
+                  @post.OriginalPostId
+                  <div id=@originalPostArea>
+                      <label>This is repost</label>
+                      @using (Ajax.BeginForm("ShowRePost", new {originalId = post.OriginalPostId},
+                          new AjaxOptions() {UpdateTargetId = originalPostArea}))
+                      {
+                          <input type="submit" value="Show original"/>
+                      }
+                  </div>
+              }
+          }  
+    }
+    else
+    {
+        <label>No posts here</label>
+    }
+}

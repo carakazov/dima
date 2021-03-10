@@ -1,0 +1,97 @@
+﻿@using MySocialNetwork.DTO
+@using MySocialNetwork.Models.SocialNetwork
+@using MySocialNetwork.Utils.Helpers
+@model MySocialNetwork.DTO.PostDto
+@{
+    UserDto userDto = (UserDto) Session["session"];
+    IEnumerable<int> scoredPostIds = userDto.ScoredPosts.Select(sp => sp.PostId);
+    string rePostSectionId = "rePostSection" + Model.Id;
+    string commentSectionId = "commentSection" + Model.Id;
+}
+<div>
+                  <p>
+                      @Html.ActionLink(Model.UserInfo.FirstName + " " + Model.UserInfo.SecondName, "PrivatePage", new {login = Model.UserInfo.Login})
+                  </p>
+                  <p>
+                      @Model.Text
+                  </p>
+                  <p>
+                      @{
+                          if (Model.Photos.Count > 0)
+                          {
+                              foreach (byte[] photo in Model.Photos)
+                              {
+                                  @Html.RenderMedia(photo, ContentTypes.Image);
+                              }
+                          }
+                          if (Model.Videos.Count > 0)
+                          {
+                              foreach (byte[] video in Model.Videos)
+                              {
+                                  @Html.RenderMedia(video, ContentTypes.Video)
+                              }
+                          }
+                          if (Model.Sounds.Count > 0)
+                          {
+                              foreach (byte[] sound in Model.Sounds)
+                              {
+                                  @Html.RenderMedia(sound, ContentTypes.Audio)
+                              }
+                          }
+                      }
+                  </p>
+    <p>
+        @Html.Label("Post's rating: ")
+        @Model.Rating
+        @using(Ajax.BeginForm("ScorePost", new {postId = Model.Id, wallId = Model.WallId, type = ScoreTypes.Positive, userId = userDto.Id}, new AjaxOptions() {UpdateTargetId = "wall"}))
+        {
+            if (!scoredPostIds.Contains(Model.Id))
+            {
+                <input type="submit" value="Like"/>   
+            }
+        }
+        @using(Ajax.BeginForm("ScorePost", new {postId = Model.Id, wallId = Model.WallId, type = ScoreTypes.Negative, userId = userDto.Id}, new AjaxOptions() {UpdateTargetId = "wall"}))
+        {
+            if (!scoredPostIds.Contains(Model.Id))
+            {
+                <input type="submit" value="Dislike"/>   
+            }
+        }
+        @using (Ajax.BeginForm("DeletePost", new {postId = Model.Id, wallId = Model.WallId}, new AjaxOptions() {UpdateTargetId = "wall"}))
+        {
+            if (Model.UserInfo.Id == userDto.Id)
+            {
+                <input type="submit" value="Delete"/>
+            }
+        }
+    </p>
+    <p>
+        @using (Ajax.BeginForm("CommentForm", new {wallId = Model.WallId, hostId = Model.Id}, new AjaxOptions() {UpdateTargetId = commentSectionId}))
+        {
+            <input type="submit" value="comment"/>
+        }
+    </p>
+    <p>
+        @using (Ajax.BeginForm("RePostForm", new {wallId = Model.WallId, originalId = Model.Id},
+            new AjaxOptions() {UpdateTargetId = rePostSectionId}))
+        {
+            <input type="submit" value="RePost"/>
+        }
+    </p>
+                  <p>
+                      @if (Model.Comments.Count > 0)
+                      {
+                          <label>Comments:</label>
+                          foreach (PostDto comment in Model.Comments)
+                          {
+                              Html.RenderAction("RenderPost", new {postDto = comment});
+                          }
+                      }
+                  </p>
+    <div id=@commentSectionId>
+                      
+    </div>
+    <div id=@rePostSectionId>
+        
+    </div>
+    </div>

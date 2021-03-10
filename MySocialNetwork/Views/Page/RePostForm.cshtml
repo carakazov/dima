@@ -1,0 +1,32 @@
+﻿@using MySocialNetwork.DAO
+@using MySocialNetwork.DTO
+@model MySocialNetwork.DTO.InputPostDto
+@{
+    int originalId = (int) ViewData["originalId"];
+    UserDto currentUser = (UserDto) Session["session"];
+    SelectList points = (SelectList) ViewData["destinationPoints"];
+}
+<div>
+    @Html.Label(originalId.ToString());
+    @using (Ajax.BeginForm("RePost", new {currentWallId = Model.WallId, originalId = originalId}, new AjaxOptions() {UpdateTargetId = "wall"}, new {enctype = "multipart/form-data"}))
+    {
+        if (!Model.OnlyImage)
+        {
+            <div>
+                <p>
+                    @Html.Label("Input your message: ")
+                    @Html.TextAreaFor(model => model.Text)
+                </p>
+            </div>
+        }
+        <div>
+            <input type="file" name="Media"/>
+        </div>
+        <div>
+            <input type="submit" value="Post"/>
+        </div>
+        <div>
+            @Html.DropDownList("rePostWallId", points)
+        </div>
+    }
+</div>

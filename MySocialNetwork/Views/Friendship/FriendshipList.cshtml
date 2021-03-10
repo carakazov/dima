@@ -1,0 +1,57 @@
+﻿@using MySocialNetwork.DTO
+@model IEnumerable<MySocialNetwork.DTO.FriendshipDto>
+@{
+    SelectList list = (SelectList) ViewData["list"];
+    UserDto userDto = (UserDto) Session["session"];
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Friendships</title>
+</head>
+<body>
+<div>
+    @foreach (FriendshipDto friendship in Model)
+    {
+        <label>@friendship.Title</label>
+        if (friendship.Friends.Count > 0)
+        {
+            <ul>
+                @foreach (UserInfoDto friend in friendship.Friends)
+                {
+                    string linkText = friend.FirstName + " " + friend.SecondName;
+                    <li>
+                        @Html.ActionLink(linkText, "PrivatePage", "Page", new {login = friend.Login}, null)
+                        @using (Html.BeginForm("ChangeFriendship", "Friendship", new {friendId = friend.Id}))
+                        {
+                            @Html.DropDownList("newTypeId", list)
+                            <input type="submit" value="Change type"/>
+                        }
+                    </li>
+                    <p>
+                        @Html.ActionLink("Dialog", "OpenDialog", "Dialog", new {login = friend.Login, firstUserId = friend.Id, secondUserId = userDto.Id}, null)
+                    </p>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>
+                <label>This friendship type still doesn't have friends in it.</label>
+            </p>
+        }
+    }
+</div>
+<div>
+    @using (Html.BeginForm("CreateFriendshipType", "Friendship"))
+    {
+        <p>
+            @Html.Editor("title")
+        </p>
+        <p>
+            <input type="submit" value="Create"/>
+        </p>
+    }
+</div>
+</body>
+</html>

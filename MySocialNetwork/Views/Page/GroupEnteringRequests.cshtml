@@ -1,0 +1,51 @@
+﻿@using MySocialNetwork.DTO
+@model List<MySocialNetwork.DTO.GroupEnteringRequestDto>
+@{
+    int groupId = (int) ViewData["groupId"];
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Requests</title>
+</head>
+<body>
+<div>
+    <h1>Requests</h1>
+    <table class="table">
+        @foreach (GroupEnteringRequestDto item in Model)
+        {
+            <tr>
+                <th>
+                    User
+                </th>
+                <th>
+                    Sendind date
+                </th>
+                </tr> 
+            <tr>
+                <td>
+                    @{ string fullName = item.userInfo.FirstName + " " + item.userInfo.SecondName + " " + item.userInfo.MiddleName; }
+                    @Html.ActionLink(fullName, "PrivatePage", new { login = item.userInfo.Login })
+                </td>
+                <td>
+                    @item.sendingDate
+                </td>
+                <td>
+                    @using (Html.BeginForm("AcceptRequest", "Page", new {groupId = groupId, userId = item.userId}))
+                    {
+                        <input type="submit" value="Accept"/>
+                    }
+                </td>
+                <td>
+                    @using (Html.BeginForm("DeclineRequest", "Page", new {groupId = groupId, userId = item.userId}))
+                    {
+                        <input type="submit" value="Decline"/>
+                    }
+                </td>
+            </tr>   
+        }
+    </table>
+</div>
+</body>
+</html>

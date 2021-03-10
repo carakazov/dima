@@ -1,0 +1,39 @@
+﻿@using MySocialNetwork.DTO
+@model MySocialNetwork.DTO.UserDto
+@{
+    UserDto currentUser = (UserDto) Session["session"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Groups</title>
+</head>
+<body>
+<div>
+    <h1>Your controlled groups</h1>
+    <div id="groupsList">
+        @{Html.RenderAction("GroupsList", new {userId = currentUser.Id});}
+    </div>
+    <div>
+        @{Html.RenderAction("CreateGroup");}
+    </div>
+</div>
+<div>
+    @Html.Label("Input title to find groups")
+    <div>
+        @using (Ajax.BeginForm("FindGroups", new AjaxOptions() {UpdateTargetId = "foundedGroups"}))
+        {
+            @Html.TextBox("title")   
+            <p>
+                <input type="submit" value="Find" />
+            </p>
+        }
+    </div>
+    <div id="foundedGroups">
+        
+    </div>
+</div>
+</body>
+</html>

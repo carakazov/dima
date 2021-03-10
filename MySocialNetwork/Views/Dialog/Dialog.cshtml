@@ -1,0 +1,32 @@
+﻿@using MySocialNetwork.DTO
+@model MySocialNetwork.DTO.DialogDto
+@{
+    string linkText = Model.User.FirstName + " " + Model.User.SecondName;
+    UserDto currentUser = (UserDto) Session["session"];
+    int currentWallId = Model.WallId;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Dialog</title>
+</head>
+<body>
+<div>
+    <label>
+        @Html.ActionLink(linkText, "PrivatePage", "Page", new {login = Model.User.Login}, null)
+    </label>
+</div>
+<div>
+    <label>Messages</label>
+    <div id="wall">
+        @{
+            Html.RenderAction("Wall","Page", new {wallId = currentWallId});
+        }
+    </div>
+    <div>
+        @{Html.RenderAction("PostingForm", "Page",new { wallId = currentWallId, onlyImage = false }); }
+    </div>
+</div>
+</body>
+</html>
